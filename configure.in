@@ -33,22 +33,22 @@ AC_C_INLINE
 
 #Add libraries MINOS (AO, 01/03/2014)
 
-AC_ARG_ENABLE(minos,
-[  --enable-minos      enable MINOS [[default=no]]],
-[\
-case "${enableval}" in
- yes) use_minos=yes ;;
- no)  use_minos=no ;;
- *)   AC_MSG_ERROR(bad value for --enable-minos) ;;
-esac],
-use_minos=no)
-if test x"${use_minos}" = x"yes"; then
-  PKG_CHECK_MODULES(MINOS_FEM,minos-fem >= 1.1.1)
-  AC_DEFINE(USE_MINOS, 1, [Define to 1 if you have minos package])
-  echo "minos is enabled"
-else
-  echo "minos is disabled"
-fi
+#AC_ARG_ENABLE(minos,
+#[  --enable-minos      enable MINOS [[default=no]]],
+#[\
+#case "${enableval}" in
+# yes) use_minos=yes ;;
+# no)  use_minos=no ;;
+# *)   AC_MSG_ERROR(bad value for --enable-minos) ;;
+#esac],
+#use_minos=no)
+#if test x"${use_minos}" = x"yes"; then
+#  PKG_CHECK_MODULES(MINOS_FEM,minos-fem >= 1.1.1)
+#  AC_DEFINE(USE_MINOS, 1, [Define to 1 if you have minos package])
+#  echo "minos is enabled"
+#else
+#  echo "minos is disabled"
+#fi
 AM_CONDITIONAL(USE_MINOS, test x"${use_minos}" = x"yes")
 
 #AC_SUBST([MINOS_CFLAGS])
