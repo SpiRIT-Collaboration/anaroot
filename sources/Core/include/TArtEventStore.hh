@@ -11,9 +11,6 @@
 #ifndef TARTEVENTSTORE_H
 #define TARTEVENTSTORE_H
 
-#include <sys/ipc.h>
-#include <sys/shm.h>
-#include <sys/sem.h>
 #include <fstream>
 #include "TArtParser.hh"
 #include "TArtDataSource.hh"

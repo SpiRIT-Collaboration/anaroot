@@ -8,6 +8,8 @@ static const int BIGRIPS    = 0;
 static const int ZeroDegree = 1;
 static const int SAMURAI    = 2;
 static const int SHARAQ     = 11;
+static const int ESPRI      = 12;
+static const int HIMAC      = 15;
 static const int DALI       = 20;
 static const int GAMMAGR    = 21;
 static const int BETAGR     = 22;
@@ -71,7 +73,7 @@ static const int STOPPLA  = 13;
 static const int F7PLAT   = 14;
 static const int PLAQ2    = 15;
 static const int NAIT     = 16;
-// 16--17
+static const int TOTQ     = 17;
 static const int LABRA    = 18;
 static const int LABRT    = 19;
 // 20
@@ -80,6 +82,7 @@ static const int DALIT    = 22;
 static const int BETAA    = 23;
 static const int BETAT    = 24;
 static const int HIA      = 25;
+static const int CLOCKT   = 25;
 static const int CLOVERA  = 26;
 static const int CLOVERT  = 27;
 static const int VETOA    = 28;
@@ -96,12 +99,20 @@ static const int SHCRDCT2 = 36;
 static const int SHCRDCA2 = 37;
 static const int SHCRDCA3 = 38;
 
+static const int MUST2DET   = 50;
+static const int PLAYOBI    = 50;
+static const int GAMMAPLAT  = 52;
+static const int HRBDC      = 54;
+static const int RDC        = 56;
+static const int PLATC      = 60;
+
 // For SAMURAI
 //
 static const int BPC      = 17; // TDC, BigRIPS devide
 static const int ICB      = 25 ;// ADC
 static const int ICF      = 26 ;// ADC
 static const int BDC      = 27 ;// TDC
+static const int FDC0     = 28 ;// 2016-06-16
 static const int FDC1     = 29 ;// TDC
 static const int FDC2     = 30 ;// TDC
 static const int HODFQ    = 31 ;// ADC
@@ -133,6 +144,11 @@ static const int RPTOF    = 55;
 static const int NEULAND  = 56; //Tacquila
 static const int NEULANDVETOQ = 57;
 static const int NEULANDVETOT = 58;
+
+static const int NINJAT   = 60;
+
+// SAMURAI13
+static const int S1MWDC   = 61;
 
 // Module  0--255
 static const int C16        = 0;
@@ -186,8 +202,8 @@ static const int LUPOMTS    = 43;  // for dead time monitor
 static const int MUST2VXI   = 50;
 static const int MINOS      = 53;
 static const int TACQUILA   = 54;
-static const int MDAQ       = 58;  // for special case
 
+static const int MDAQ       = 58;  // for special case
 
 // Scaler ID 0--65535
 static const int DTMONSCALER   =1;

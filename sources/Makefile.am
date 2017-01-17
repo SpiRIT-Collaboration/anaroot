@@ -11,6 +11,7 @@ libanaroot_la_LIBADD = \
  Reconstruction/BigRIPS/libanabrips.la \
  Reconstruction/DALI/libanadali.la \
  Reconstruction/WINDS/libanawinds.la \
+ Reconstruction/ESPRI/libanaespri.la \
  Reconstruction/SAMURAI/libanasamurai.la
 
 if USE_MINOS

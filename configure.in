@@ -73,5 +73,6 @@ AC_CONFIG_FILES([Makefile
                  sources/Reconstruction/SAMURAI/Makefile
                  sources/Reconstruction/MINOS/Makefile                 
 		 sources/Reconstruction/WINDS/Makefile
+		 sources/Reconstruction/ESPRI/Makefile
                  sources/Reconstruction/DALI/Makefile])
 AC_OUTPUT

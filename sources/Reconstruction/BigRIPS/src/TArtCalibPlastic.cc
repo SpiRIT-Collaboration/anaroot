@@ -110,7 +110,9 @@ void TArtCalibPlastic::LoadData(TArtRawSegmentObject *seg)   {
     }
     if(PLAT == detector || STOPPLA == detector || RF == detector ){
       if(mm==*((TArtRIDFMap *)para->GetTLMap())){
-	if(pla->GetTLRaw()<=0){ 
+	if(pla->GetTLRaw()<=0 &&
+	   val>para->GetTDCUnderflow() && 
+	   val<para->GetTDCOverflow() ){ 
 	  pla->SetTLRaw(val);
 	}
 	else{
@@ -118,7 +120,9 @@ void TArtCalibPlastic::LoadData(TArtRawSegmentObject *seg)   {
 	}
       }
       if(mm==*((TArtRIDFMap *)para->GetTRMap())){
-	if(pla->GetTRRaw()<=0){
+	if(pla->GetTRRaw()<=0 &&
+	   val>para->GetTDCUnderflow() && 
+	   val<para->GetTDCOverflow() ){ 
 	  pla->SetTRRaw(val);
 	}
 	else{
@@ -167,29 +171,29 @@ void TArtCalibPlastic::ReconstructData()   { // call after the raw data are load
     Double_t fTimeRSlew = -1; 
     Double_t fTimeSlew = -1; 
 
-    if(fTLRaw>para->GetTDCUnderflow() && fTLRaw<para->GetTDCOverflow()) {
-      fLFired = true;
-      fTimeL = fTLRaw * para->GetTCalLeft();
-      if(fQLRaw>0){
-	fTimeLSlew = fTLRaw + para->GetTLSlewA()/(TMath::Sqrt(fQLRaw)) + para->GetTLSlewB();
-	fTimeLSlew = fTimeLSlew * para->GetTCalLeft();
-      }
-      else{
-	fTimeLSlew = fTimeL;
-      }
+    //    if(fTLRaw>para->GetTDCUnderflow() && fTLRaw<para->GetTDCOverflow()) { // move to LoadData(), Dec. 02 2016 TI 
+    fLFired = true;
+    fTimeL = fTLRaw * para->GetTCalLeft();
+    if(fQLRaw>0){
+      fTimeLSlew = fTLRaw + para->GetTLSlewA()/(TMath::Sqrt(fQLRaw)) + para->GetTLSlewB();
+      fTimeLSlew = fTimeLSlew * para->GetTCalLeft();
     }
+    else{
+      fTimeLSlew = fTimeL;
+    }
+    //    }
 
-    if(fTRRaw>para->GetTDCUnderflow() && fTRRaw<para->GetTDCOverflow()) {
-      fRFired = true;
-      fTimeR = fTRRaw * para->GetTCalRight();
-      if(fQRRaw>0){
-	fTimeRSlew = fTRRaw + para->GetTRSlewA()/(TMath::Sqrt(fQRRaw)) + para->GetTRSlewB();
-	fTimeRSlew = fTimeRSlew * para->GetTCalRight();
-      }
-      else{
-        fTimeRSlew = fTimeR;
-      }
+    //    if(fTRRaw>para->GetTDCUnderflow() && fTRRaw<para->GetTDCOverflow()) { // move to LoadData(), Dec. 02 2016 TI 
+    fRFired = true;
+    fTimeR = fTRRaw * para->GetTCalRight();
+    if(fQRRaw>0){
+      fTimeRSlew = fTRRaw + para->GetTRSlewA()/(TMath::Sqrt(fQRRaw)) + para->GetTRSlewB();
+      fTimeRSlew = fTimeRSlew * para->GetTCalRight();
     }
+    else{
+      fTimeRSlew = fTimeR;
+    }
+    //    }
     if(fLFired && fRFired) fFired = true;
 
     if(fFired) {

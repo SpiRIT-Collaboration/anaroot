@@ -51,9 +51,12 @@ public:
   void PrintListOfBPCHitPara ();
   void PrintListOfBDC1HitPara();
   void PrintListOfBDC2HitPara();
+  void PrintListOfFDC0HitPara();
   void PrintListOfFDC1HitPara();
   void PrintListOfFDC2HitPara();
   void PrintListOfRPDCHitPara();
+  void PrintListOfS1DC1HitPara();
+  void PrintListOfS1DC2HitPara();
   void PrintListOfNEBULAPlaPara() const;
   void PrintListOfNeuLANDPlaPara() const;
   void PrintListOfNeuLANDVETOPlaPara() const;
@@ -65,9 +68,12 @@ public:
   TList* GetListOfBPCHitPara () {return listOfBPCHitPara; }
   TList* GetListOfBDC1HitPara() {return listOfBDC1HitPara; }
   TList* GetListOfBDC2HitPara() {return listOfBDC2HitPara; }
+  TList* GetListOfFDC0HitPara() {return listOfFDC0HitPara; }
   TList* GetListOfFDC1HitPara() {return listOfFDC1HitPara; }
   TList* GetListOfFDC2HitPara() {return listOfFDC2HitPara; }
   TList* GetListOfRPDCHitPara() {return listOfBDC1HitPara; }
+  TList* GetListOfS1DC1HitPara() {return listOfS1DC1HitPara; }
+  TList* GetListOfS1DC2HitPara() {return listOfS1DC2HitPara; }
 
   const TArtHODPlaPara* FindHODPlaPara   (TArtRIDFMap *rmap) const;
   const TArtRPTOFPlaPara* FindRPTOFPlaPara   (TArtRIDFMap *rmap) const;
@@ -75,9 +81,12 @@ public:
   const TArtDCHitPara * FindBPCHitPara   (TArtRIDFMap *rmap) const;
   const TArtDCHitPara * FindBDC1HitPara  (TArtRIDFMap *rmap) const;
   const TArtDCHitPara * FindBDC2HitPara  (TArtRIDFMap *rmap) const;
+  const TArtDCHitPara * FindFDC0HitPara  (TArtRIDFMap *rmap) const;
   const TArtDCHitPara * FindFDC1HitPara  (TArtRIDFMap *rmap) const;
   const TArtDCHitPara * FindFDC2HitPara  (TArtRIDFMap *rmap) const;
   const TArtDCHitPara * FindRPDCHitPara  (TArtRIDFMap *rmap) const;
+  const TArtDCHitPara * FindS1DC1HitPara  (TArtRIDFMap *rmap) const;
+  const TArtDCHitPara * FindS1DC2HitPara  (TArtRIDFMap *rmap) const;
 
   const TArtNEBULAPlaPara* FindNEBULAPlaUPara(const TArtRIDFMap &rmap) const;
   const TArtNEBULAPlaPara* FindNEBULAPlaDPara(const TArtRIDFMap &rmap) const;
@@ -113,9 +122,12 @@ private:
   std::map<TArtRIDFMap, TArtDCHitPara *> bpc_pmap;
   std::map<TArtRIDFMap, TArtDCHitPara *> bdc1_pmap;
   std::map<TArtRIDFMap, TArtDCHitPara *> bdc2_pmap;
+  std::map<TArtRIDFMap, TArtDCHitPara *> fdc0_pmap;
   std::map<TArtRIDFMap, TArtDCHitPara *> fdc1_pmap;
   std::map<TArtRIDFMap, TArtDCHitPara *> fdc2_pmap;
   std::map<TArtRIDFMap, TArtDCHitPara *> rpdc_pmap;
+  std::map<TArtRIDFMap, TArtDCHitPara *> s1dc1_pmap;
+  std::map<TArtRIDFMap, TArtDCHitPara *> s1dc2_pmap;
 
   TArtNEBULAPlaParaMap  *fNEBULAPlaUParaMap, *fNEBULAPlaDParaMap;
   TArtNEBULAHPCParaMap  *fNEBULAHPCParaMap;
@@ -130,9 +142,12 @@ private:
   TList *listOfBPCHitPara;
   TList *listOfBDC1HitPara;
   TList *listOfBDC2HitPara;
+  TList *listOfFDC0HitPara;
   TList *listOfFDC1HitPara;
   TList *listOfFDC2HitPara;
   TList *listOfRPDCHitPara;
+  TList *listOfS1DC1HitPara;
+  TList *listOfS1DC2HitPara;
 
   // for optimization
   std::map<int, TArtNEBULAPlaPara*> fIDNEBULAPlaParaMap;

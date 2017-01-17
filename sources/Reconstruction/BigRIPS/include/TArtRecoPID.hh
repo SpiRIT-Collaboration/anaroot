@@ -31,9 +31,15 @@ class TArtRecoPID : public TArtReconstruction {
   void ReconstructData();
 
   // function to define new combination
+  // file is matrix file for the reconstruction of Brho
   TArtRIPS * DefineNewRIPS(Int_t ffpl, Int_t bfpl, char *file, Double_t brho);
+
+  // if you mention the name of dipole, the center brho is given from header information
   TArtRIPS * DefineNewRIPS(Int_t ffpl, Int_t bfpl, char *file, char *dipolename);
+
+  // offset is tof offset. to calculate tof-upstream and tof-downstream mfpl should be defined to get tof length for each (usually mfpl=5 at BigRIPS). 
   TArtTOF *  DefineNewTOF(char *uplname, char *dplname, Double_t offset=0, Int_t mfpl=-1);
+
   TArtBeam * DefineNewBeam(TArtRIPS *rips, TArtTOF *tof, char * icname);
   TArtBeam * DefineNewBeam(TArtRIPS *urips, TArtRIPS *drips, TArtTOF *tof, char * icname);
 

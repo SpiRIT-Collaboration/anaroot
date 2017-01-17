@@ -13,10 +13,12 @@ class TArtCalibCoin;
 class TArtCalibBPCHit;
 class TArtCalibBDC1Hit;
 class TArtCalibBDC2Hit;
+class TArtCalibFDC0Hit;
 class TArtCalibFDC1Hit;
 class TArtCalibFDC2Hit;
 class TArtCalibBDC1Track;
 class TArtCalibBDC2Track;
+class TArtCalibFDC0Track;
 class TArtCalibFDC1Track;
 class TArtCalibFDC2Track;
 class TArtCalibHODPla;
@@ -41,10 +43,12 @@ class TArtCalibSAMURAI : public TArtReconstruction {
   TClonesArray    * GetBPCHitArray();
   TClonesArray    * GetBDC1HitArray();
   TClonesArray    * GetBDC2HitArray();
+  TClonesArray    * GetFDC0HitArray();
   TClonesArray    * GetFDC1HitArray();
   TClonesArray    * GetFDC2HitArray();
   TClonesArray    * GetBDC1TrackArray();
   TClonesArray    * GetBDC2TrackArray();
+  TClonesArray    * GetFDC0TrackArray();
   TClonesArray    * GetFDC1TrackArray();
   TClonesArray    * GetFDC2TrackArray();
   TClonesArray    * GetHODPlaArray();
@@ -54,10 +58,12 @@ class TArtCalibSAMURAI : public TArtReconstruction {
   TArtCalibBPCHit * GetCalibBPCHit(){return fCalibBPCHit;}
   TArtCalibBDC1Hit * GetCalibBDC1Hit(){return fCalibBDC1Hit;}
   TArtCalibBDC2Hit * GetCalibBDC2Hit(){return fCalibBDC2Hit;}
+  TArtCalibFDC0Hit * GetCalibFDC0Hit(){return fCalibFDC0Hit;}
   TArtCalibFDC1Hit * GetCalibFDC1Hit(){return fCalibFDC1Hit;}
   TArtCalibFDC2Hit * GetCalibFDC2Hit(){return fCalibFDC2Hit;}
   TArtCalibBDC1Track * GetCalibBDC1Track(){return fCalibBDC1Track;}
   TArtCalibBDC2Track * GetCalibBDC2Track(){return fCalibBDC2Track;}
+  TArtCalibFDC0Track * GetCalibFDC0Track(){return fCalibFDC0Track;}
   TArtCalibFDC1Track * GetCalibFDC1Track(){return fCalibFDC1Track;}
   TArtCalibFDC2Track * GetCalibFDC2Track(){return fCalibFDC2Track;}
   TArtCalibHODPla * GetCalibHODPla(){return fCalibHODPla;}
@@ -69,10 +75,12 @@ class TArtCalibSAMURAI : public TArtReconstruction {
   TArtCalibBPCHit * fCalibBPCHit;
   TArtCalibBDC1Hit * fCalibBDC1Hit;
   TArtCalibBDC2Hit * fCalibBDC2Hit;
+  TArtCalibFDC0Hit * fCalibFDC0Hit;
   TArtCalibFDC1Hit * fCalibFDC1Hit;
   TArtCalibFDC2Hit * fCalibFDC2Hit;
   TArtCalibBDC1Track * fCalibBDC1Track;
   TArtCalibBDC2Track * fCalibBDC2Track;
+  TArtCalibFDC0Track * fCalibFDC0Track;
   TArtCalibFDC1Track * fCalibFDC1Track;
   TArtCalibFDC2Track * fCalibFDC2Track;
   TArtCalibHODPla * fCalibHODPla;

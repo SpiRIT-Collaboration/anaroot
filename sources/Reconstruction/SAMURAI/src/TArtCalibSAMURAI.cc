@@ -5,10 +5,12 @@
 #include "TArtCalibBPCHit.hh"
 #include "TArtCalibBDC1Hit.hh"
 #include "TArtCalibBDC2Hit.hh"
+#include "TArtCalibFDC0Hit.hh"
 #include "TArtCalibFDC1Hit.hh"
 #include "TArtCalibFDC2Hit.hh"
 #include "TArtCalibBDC1Track.hh"
 #include "TArtCalibBDC2Track.hh"
+#include "TArtCalibFDC0Track.hh"
 #include "TArtCalibFDC1Track.hh"
 #include "TArtCalibFDC2Track.hh"
 #include "TArtCalibHODPla.hh"
@@ -36,6 +38,8 @@ TArtCalibSAMURAI::TArtCalibSAMURAI() : TArtReconstruction()
   Double_t bdc1_tzero = 795;
   Double_t bdc2_int_drift_tdc = 770-722;
   Double_t bdc2_tzero = 770;
+  Double_t fdc0_int_drift_tdc = 0;
+  Double_t fdc0_tzero = 0;
   Double_t fdc1_int_drift_tdc = 1610-1510;
   Double_t fdc1_tzero = 1610;
   Double_t fdc2_int_drift_tdc = 1495-1090;
@@ -45,6 +49,7 @@ TArtCalibSAMURAI::TArtCalibSAMURAI() : TArtReconstruction()
   fCalibBPCHit = new TArtCalibBPCHit();
   fCalibBDC1Hit = new TArtCalibBDC1Hit();
   fCalibBDC2Hit = new TArtCalibBDC2Hit();
+  fCalibFDC0Hit = new TArtCalibFDC0Hit();
   fCalibFDC1Hit = new TArtCalibFDC1Hit();
   fCalibFDC2Hit = new TArtCalibFDC2Hit();
 
@@ -55,6 +60,10 @@ TArtCalibSAMURAI::TArtCalibSAMURAI() : TArtReconstruction()
   fCalibBDC2Track = new TArtCalibBDC2Track();
   fCalibBDC2Track->SetDriftVelocity(5 * 0.5 / bdc2_int_drift_tdc); // 5mm pitch, mm/tdc, used only for simple tracking 
   fCalibBDC2Track->SetTDCStart(bdc2_tzero); // used only for simple tracking 
+
+  fCalibFDC0Track = new TArtCalibFDC0Track();
+  fCalibFDC0Track->SetDriftVelocity(5 * 0.5 / fdc0_int_drift_tdc); // 5mm pitch, mm/tdc, used only for simple tracking 
+  fCalibFDC0Track->SetTDCStart(fdc0_tzero); // used only for simple tracking 
 
   fCalibFDC1Track = new TArtCalibFDC1Track();
   fCalibFDC1Track->SetDriftVelocity(10 * 0.5 / fdc1_int_drift_tdc); // 10mm pitch, mm/tdc, used only for simple tracking 
@@ -100,6 +109,15 @@ void TArtCalibSAMURAI::LoadDCTDCDistribution(char * file)  {
     delete hist; hist = NULL;
     hist = (TH1F*)((TH2F*)fdcin->Get(myname))->ProjectionY();
     fCalibBDC2Track->SetTDCDistribution(hist,i*2+1);
+    delete hist; hist = NULL;
+
+    sprintf(myname,"fdc0_ftdc_corr_%d",i);
+
+    hist = (TH1F*)((TH2F*)fdcin->Get(myname))->ProjectionX();
+    fCalibFDC0Track->SetTDCDistribution(hist,i*2);
+    delete hist; hist = NULL;
+    hist = (TH1F*)((TH2F*)fdcin->Get(myname))->ProjectionY();
+    fCalibFDC0Track->SetTDCDistribution(hist,i*2+1);
     delete hist; hist = NULL;
   }
 
@@ -156,6 +174,15 @@ void TArtCalibSAMURAI::LoadDCSTC(char * file)  {
     hist = (TH1F*)((TH2F*)fdcin->Get(myname))->ProjectionY();
     fCalibBDC2Track->SetTDCDistribution(hist,i*2+1);
     delete hist; hist = NULL;
+
+    sprintf(myname,"fdc0_ftdc_corr_%d",i);
+
+    hist = (TH1F*)((TH2F*)fdcin->Get(myname))->ProjectionX();
+    fCalibFDC0Track->SetTDCDistribution(hist,i*2);
+    delete hist; hist = NULL;
+    hist = (TH1F*)((TH2F*)fdcin->Get(myname))->ProjectionY();
+    fCalibFDC0Track->SetTDCDistribution(hist,i*2+1);
+    delete hist; hist = NULL;
   }
   */
 
@@ -207,6 +234,8 @@ void TArtCalibSAMURAI::LoadData(TArtRawSegmentObject *seg)   {
     fCalibBDC1Hit->LoadData(seg);
   if(BDC == detector)
     fCalibBDC2Hit->LoadData(seg);
+  else if(FDC0 == detector)
+    fCalibFDC0Hit->LoadData(seg);
   else if(FDC1 == detector)
     fCalibFDC1Hit->LoadData(seg);
   else if(FDC2 == detector)
@@ -230,6 +259,8 @@ void TArtCalibSAMURAI::ClearData()   {
   fCalibBDC1Track->ClearData();
   fCalibBDC2Hit->ClearData();
   fCalibBDC2Track->ClearData();
+  fCalibFDC0Hit->ClearData();
+  fCalibFDC0Track->ClearData();
   fCalibFDC1Hit->ClearData();
   fCalibFDC1Track->ClearData();
   fCalibFDC2Hit->ClearData();
@@ -255,6 +286,10 @@ void TArtCalibSAMURAI::ReconstructData()   {
   fCalibBDC2Track->ReconstructData();
   TArtCore::Debug(__FILE__,"CalibBPCHit");
   fCalibBPCHit->ReconstructData();
+  TArtCore::Debug(__FILE__,"CalibFDC0Hit");
+  fCalibFDC0Hit->ReconstructData();
+  TArtCore::Debug(__FILE__,"CalibFDC0Track");
+  fCalibFDC0Track->ReconstructData();
   TArtCore::Debug(__FILE__,"CalibFDC1Hit");
   fCalibFDC1Hit->ReconstructData();
   TArtCore::Debug(__FILE__,"CalibFDC1Track");
@@ -284,6 +319,10 @@ TClonesArray * TArtCalibSAMURAI::GetBDC2HitArray(){
   return fCalibBDC2Hit->GetDCHitArray();
 }
 //__________________________________________________________
+TClonesArray * TArtCalibSAMURAI::GetFDC0HitArray(){
+  return fCalibFDC0Hit->GetDCHitArray();
+}
+//__________________________________________________________
 TClonesArray * TArtCalibSAMURAI::GetFDC1HitArray(){
   return fCalibFDC1Hit->GetDCHitArray();
 }
@@ -298,6 +337,10 @@ TClonesArray * TArtCalibSAMURAI::GetBDC1TrackArray(){
 //__________________________________________________________
 TClonesArray * TArtCalibSAMURAI::GetBDC2TrackArray(){
   return fCalibBDC2Track->GetDCTrackArray();
+}
+//__________________________________________________________
+TClonesArray * TArtCalibSAMURAI::GetFDC0TrackArray(){
+  return fCalibFDC0Track->GetDCTrackArray();
 }
 //__________________________________________________________
 TClonesArray * TArtCalibSAMURAI::GetFDC1TrackArray(){
