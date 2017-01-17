@@ -1,11 +1,11 @@
-#include "TArtCalibPPAC.hh" 
+#include "TArtCalibPPAC.hh"
 #include "TArtPPAC.hh"
 #include "TArtPPACPara.hh"
 #include "TArtBigRIPSParameters.hh"
 #include "TArtRawEventObject.hh"
-#include "TArtTOF.hh" 
-#include "TArtCore.hh" 
-#include "TArtStoreManager.hh" 
+#include "TArtTOF.hh"
+#include "TArtCore.hh"
+#include "TArtStoreManager.hh"
 #include "TArtReconstruction.hh"
 
 #include <TROOT.h>
@@ -93,8 +93,8 @@ void TArtCalibPPAC::LoadData(TArtRawSegmentObject *seg)   {
 
   for(Int_t j=0;j<seg->GetNumData();j++){
     TArtRawDataObject *d = seg->GetData(j);
-    Int_t geo = d->GetGeo(); 
-    Int_t ch = d->GetCh(); 
+    Int_t geo = d->GetGeo();
+    Int_t ch = d->GetCh();
     Int_t val = (Int_t)d->GetVal();
     TArtRIDFMap mm(fpl,detector,geo,ch);
     TArtPPACPara *para = (TArtPPACPara*)setup->FindPPACPara(&mm);
@@ -182,11 +182,11 @@ void TArtCalibPPAC::ReconstructData()   { // call after the raw data are loaded
 
     Double_t fX      = -999.;
     Double_t fY      = -999.;
-    bool fFiredX = false;     
+    bool fFiredX = false;
     bool fFiredY = false;
- 
-    Double_t fTSumX = -9999.; 
-    Double_t fTSumY = -9999.; 
+
+    Double_t fTSumX = -9999.;
+    Double_t fTSumY = -9999.;
     Double_t fTDiffX = -9999.;
     Double_t fTDiffY = -9999.;
 
@@ -201,7 +201,7 @@ void TArtCalibPPAC::ReconstructData()   { // call after the raw data are loaded
     Double_t fTY1 = fTY1Raw * para->GetCh2NsY1();
     Double_t fTY2 = fTY2Raw * para->GetCh2NsY2();
     Double_t fTA  = fTARaw  * para->GetCh2NsA();
-    
+
     Double_t fTDC_OF = para->GetTDCOverflow();
 
     // modified for non-12bit TDC readout
@@ -210,30 +210,80 @@ void TArtCalibPPAC::ReconstructData()   { // call after the raw data are loaded
 	 fTSumX = fTX1 + fTX2 - 2*fTA;
 	 fTDiffX = fTX1 - fTX2;
      }
-     if(fTY1Raw >0 && fTY1Raw < fTDC_OF && 
+     if(fTY1Raw >0 && fTY1Raw < fTDC_OF &&
 	fTY2Raw >0 && fTY2Raw < fTDC_OF ) {
 	  fTSumY = fTY1 + fTY2 - 2*fTA;
 	  fTDiffY = fTY1 - fTY2;
      }
 
-    if((para->GetTXSumMin() >= para->GetTXSumMax()) || 
-       (fTSumX >= para->GetTXSumMin() && fTSumX <= para->GetTXSumMax()) ){  
+    if((para->GetTXSumMin() >= para->GetTXSumMax()) ||
+       (fTSumX >= para->GetTXSumMin() && fTSumX <= para->GetTXSumMax()) ){
       fTDiffX = fTDiffX - para->GetXDTimeOffset();
       fX = fTDiffX * para->GetXFactor() / 2.;
       fX -= para->GetXOffset();
       fX -= para->GetXPosOffset();
       fX = -fX; // definition for optics only for X
-      fFiredX = true;     
+      fFiredX = true;
       //TArtCore::Info(__FILE__,"%s: RawTX1:%f, RawTX2:%f, TX1:%f, TX2:%f, TXdiff:%f, fX:%f,  Ch2NsX1:%f, Ch2NsX2:%f, XDTimeOffset:%f, XFactor:%f, XOffset:%f, XPosOffset:%f, X:%f", para->GetDetectorName()->Data(), fTX1Raw, fTX2Raw, fTX1, fTX2, fTDiffX, fX, para->GetCh2NsX1(), para->GetCh2NsX2(), para->GetXDTimeOffset(), para->GetXFactor(), para->GetXOffset(), para->GetXPosOffset(),fX);
     }
-    if((para->GetTYSumMin() >= para->GetTYSumMax()) || 
-       (fTSumY >= para->GetTYSumMin() && fTSumY <= para->GetTYSumMax()) ){  
+    //
+    else if( not(fTSumX >= para->GetTXSumMin() && fTSumX <= para->GetTXSumMax()) &&
+    (2.*fTX1-2.*fTA >= 2.*para->GetTXSumMin()-para->GetTXSumMax() )&&
+    (2.*fTX1-2.*fTA <= 2.*para->GetTXSumMax()-para->GetTXSumMin() ) ){//if TX1 and TA are reasonable
+      fTDiffX=2.*fTX1-((para->GetTXSumMin() + para->GetTXSumMax())/2 +2.*fTA);//Approximate TX2
+      fTDiffX = fTDiffX - para->GetXDTimeOffset();
+      fX = fTDiffX * para->GetXFactor() / 2.;
+      fX -= para->GetXOffset();
+      fX -= para->GetXPosOffset();
+      fX = -fX; // definition for optics only for X
+      fFiredX = true;
+      //TArtCore::Info(__FILE__,"%s: RawTX1:%f, RawTX2:%f, TX1:%f, TX2:%f, TXdiff:%f, fX:%f,  Ch2NsX1:%f, Ch2NsX2:%f, XDTimeOffset:%f, XFactor:%f, XOffset:%f, XPosOffset:%f, X:%f", para->GetDetectorName()->Data(), fTX1Raw, fTX2Raw, fTX1, fTX2, fTDiffX, fX, para->GetCh2NsX1(), para->GetCh2NsX2(), para->GetXDTimeOffset(), para->GetXFactor(), para->GetXOffset(), para->GetXPosOffset(),fX);
+    }
+    else if( not(fTSumX >= para->GetTXSumMin() && fTSumX <= para->GetTXSumMax()) &&
+     (2.*fTX2-2.*fTA >= 2.*para->GetTXSumMin()-para->GetTXSumMax() )&&
+     (2.*fTX2-2.*fTA <= 2.*para->GetTXSumMax()-para->GetTXSumMin() ) ){//if TX2 and TA are reasonable
+      fTDiffX=((para->GetTXSumMin() + para->GetTXSumMax())/2 +2.*fTA)-(2.*fTX2);//Approximate TX1
+      fTDiffX = fTDiffX - para->GetXDTimeOffset();
+      fX = fTDiffX * para->GetXFactor() / 2.;
+      fX -= para->GetXOffset();
+      fX -= para->GetXPosOffset();
+      fX = -fX; // definition for optics only for X
+      fFiredX = true;
+      //TArtCore::Info(__FILE__,"%s: RawTX1:%f, RawTX2:%f, TX1:%f, TX2:%f, TXdiff:%f, fX:%f,  Ch2NsX1:%f, Ch2NsX2:%f, XDTimeOffset:%f, XFactor:%f, XOffset:%f, XPosOffset:%f, X:%f", para->GetDetectorName()->Data(), fTX1Raw, fTX2Raw, fTX1, fTX2, fTDiffX, fX, para->GetCh2NsX1(), para->GetCh2NsX2(), para->GetXDTimeOffset(), para->GetXFactor(), para->GetXOffset(), para->GetXPosOffset(),fX);
+    }
+
+
+    if((para->GetTYSumMin() >= para->GetTYSumMax()) ||
+       (fTSumY >= para->GetTYSumMin() && fTSumY <= para->GetTYSumMax()) ){
       fTDiffY = fTDiffY - para->GetYDTimeOffset();
       fY = fTDiffY * para->GetYFactor() / 2.;
       fY -= para->GetYOffset();
       fY -= para->GetYPosOffset();
       fFiredY = true;
     }
+
+    else if( not(fTSumY >= para->GetTYSumMin() && fTSumY <= para->GetTYSumMax()) &&
+    (2.*fTY1-2.*fTA >= 2.*para->GetTYSumMin()-para->GetTYSumMax() )&&
+    (2.*fTY1-2.*fTA <= 2.*para->GetTYSumMax()-para->GetTYSumMin() ) ){//if TY1 and TA are reasonable
+      fTDiffY=2.*fTY1-((para->GetTYSumMin() + para->GetTYSumMax())/2 +2.*fTA);//Approximate TY1
+      fTDiffY = fTDiffY - para->GetYDTimeOffset();
+      fY = fTDiffY * para->GetYFactor() / 2.;
+      fY -= para->GetYOffset();
+      fY -= para->GetYPosOffset();
+      fFiredY = true;
+    }
+
+    else if( not(fTSumY >= para->GetTYSumMin() && fTSumY <= para->GetTYSumMax()) &&
+    (2.*fTY2-2.*fTA >= 2.*para->GetTYSumMin()-para->GetTYSumMax() )&&
+    (2.*fTY2-2.*fTA <= 2.*para->GetTYSumMax()-para->GetTYSumMin() ) ){//if TY2 and TA are reasonable
+      fTDiffY=2.*fTY2-((para->GetTYSumMin() + para->GetTYSumMax())/2 +2.*fTA);//Approximate TY2
+      fTDiffY = fTDiffY - para->GetYDTimeOffset();
+      fY = fTDiffY * para->GetYFactor() / 2.;
+      fY -= para->GetYOffset();
+      fY -= para->GetYPosOffset();
+      fFiredY = true;
+    }
+
 
     ppac->SetTX1(fTX1);
     ppac->SetTX2(fTX2);
