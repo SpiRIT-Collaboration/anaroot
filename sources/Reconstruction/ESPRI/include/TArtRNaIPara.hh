@@ -37,7 +37,7 @@ class TArtRNaIPara : public TNamed {
   TArtRIDFMap * GetTDCMap() { return &map_tdc;  }
   TArtRIDFMap * GetADCMap() { return &map_adc;  }
 
-  friend ostream & operator << (ostream& out, const TArtRNaIPara& p) {
+  friend std::ostream & operator << (std::ostream& out, const TArtRNaIPara& p) {
     out << "ID: " << p.id << ", ";
     out << "DetectorName: " << p.detname << ", ";
     out << "Focal Plane: " << p.fpl << ", ";

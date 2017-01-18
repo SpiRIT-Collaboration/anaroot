@@ -35,7 +35,7 @@ class TArtTDCHitPara : public TNamed {
 
   TArtRIDFMap * GetTDCMap() { return &map;  }
 
-  friend ostream & operator << (ostream& out, const TArtTDCHitPara& p) {
+  friend std::ostream & operator << (std::ostream& out, const TArtTDCHitPara& p) {
     out << "ID: " << p.id << ", ";
     out << "DetectorName: " << p.detname << ", ";
     out << "Focal Plane: " << p.fpl << ", ";

@@ -32,7 +32,7 @@ class TArtPlasPara : public TNamed {
 
   TArtRIDFMap * GetPlasMap() { return &map;  }
 
-  friend ostream & operator << (ostream& out, const TArtPlasPara& p) {
+  friend std::ostream & operator << (std::ostream& out, const TArtPlasPara& p) {
     out << "ID: " << p.id << ", ";
     out << "DetectorName: " << p.detname << ", ";
     out << "Focal Plane: " << p.fpl << ", ";

@@ -77,7 +77,7 @@ Bool_t TArtESPRIParameters::LoadParameter(const char *xmlfile)
   domParser.SetValidate(false);
   Int_t parsecode = domParser.ParseFile(xmlfile);
   if(parsecode < 0){
-    cerr << domParser.GetParseCodeMessage(parsecode) << endl;
+    std::cerr << domParser.GetParseCodeMessage(parsecode) << std::endl;
     return false;
   }
   TXMLNode* node = domParser.GetXMLDocument()->GetRootNode();

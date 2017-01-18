@@ -29,7 +29,7 @@ class TArtFADCPara : public TNamed {
 
   TArtRIDFMap * GetFADCMap() { return &map;  }
 
-  friend ostream & operator << (ostream& out, const TArtFADCPara& p) {
+  friend std::ostream & operator << (std::ostream& out, const TArtFADCPara& p) {
     out << "ID: " << p.id << ", ";
     out << "DetectorName: " << p.detname << ", ";
     out << "Focal Plane: " << p.fpl << ", ";
