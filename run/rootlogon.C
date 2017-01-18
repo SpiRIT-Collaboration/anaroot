@@ -1,3 +1,4 @@
+#if !defined(__CINT__) && !defined(__CLING__)
 #include "TROOT.h"
 #include "TSystem.h"
 #include "TStyle.h"
@@ -7,6 +8,7 @@
 #include <string>
 #include <vector>
 #include <cstdlib>
+#endif
 
 void AddIncludePath(std::string dir);
 void AddLinkedLibs();
@@ -66,12 +68,20 @@ void rootlogon()
 void AddIncludePath(std::string install_dir)
 {
   std::vector<std::string> include;
+#if ROOT_VERSION_CODE > ROOT_VERSION(5,99,99)
+  include.push_back(install_dir + "/include");
+#else
   include.push_back("-I"+install_dir+"/include");
+#endif
   //  include.push_back("`xml2-config --cflags`");
 
   std::vector<std::string>::iterator it = include.begin();
   while(it != include.end()){
+#if ROOT_VERSION_CODE > ROOT_VERSION(5,99,99)
+    gInterpreter->AddIncludePath((*it).c_str());
+#else
     gSystem->AddIncludePath((*it).c_str());
+#endif
     std::cout << "add include path : " << *it << std::endl;
     ++it;
   }

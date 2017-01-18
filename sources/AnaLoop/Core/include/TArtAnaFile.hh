@@ -229,7 +229,7 @@ private:
 //_______________________________________________
 class TArtAnaFile
 {
-#ifndef __CINT__
+#if !defined(__CINT__) && !defined(__CLING__)
   //http://root.cern.ch/phpBB3/viewtopic.php?f=5&t=10451
   //関数ポインタがCINTは苦手なのでdictionaryには入れない。
   typedef bool (TArtAnaFile::*FSequence)(std::string, int, std::string);
@@ -290,7 +290,9 @@ private:
   //
   //squence周り
   //_____________________________________________________________
+#if !defined(__CINT__) && !defined(__CLING__)
   bool AddSequenceMap(std::string name, FSequence fp);
+#endif
 
   //sequences for anafile. 関数ポインタとしてfSequenceMapに入れる。
   bool Hist(std::string str, int countline, std::string sequence);
@@ -319,7 +321,7 @@ private:
   //  bool ReadName(std::string str, int countline, std::string& name);
   bool ReadTitle(std::string& str, int countline, std::string& title);
 
-#ifndef __CINT__
+#if !defined(__CINT__) && !defined(__CLING__)
   std::map<std::string, FSequence> fSequenceMap;
 #endif
 
