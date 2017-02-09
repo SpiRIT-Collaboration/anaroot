@@ -223,17 +223,67 @@ void TArtCalibPPAC::ReconstructData()   { // call after the raw data are loaded
       fX -= para->GetXOffset();
       fX -= para->GetXPosOffset();
       fX = -fX; // definition for optics only for X
+      fFiredX = true;
+      //TArtCore::Info(__FILE__,"%s: RawTX1:%f, RawTX2:%f, TX1:%f, TX2:%f, TXdiff:%f, fX:%f,  Ch2NsX1:%f, Ch2NsX2:%f, XDTimeOffset:%f, XFactor:%f, XOffset:%f, XPosOffset:%f, X:%f", para->GetDetectorName()->Data(), fTX1Raw, fTX2Raw, fTX1, fTX2, fTDiffX, fX, para->GetCh2NsX1(), para->GetCh2NsX2(), para->GetXDTimeOffset(), para->GetXFactor(), para->GetXOffset(), para->GetXPosOffset(),fX);
+    }
+    //
+    else if( not(fTSumX >= para->GetTXSumMin() && fTSumX <= para->GetTXSumMax()) &&
+    (2.*fTX1-2.*fTA >= 2.*para->GetTXSumMin()-para->GetTXSumMax() )&&
+    (2.*fTX1-2.*fTA <= 2.*para->GetTXSumMax()-para->GetTXSumMin() ) ){//if TX1 and TA are reasonable
+      fTDiffX=2.*fTX1-((para->GetTXSumMin() + para->GetTXSumMax())/2 +2.*fTA);//Approximate TX2
+      fTDiffX = fTDiffX - para->GetXDTimeOffset();
+      fX = fTDiffX * para->GetXFactor() / 2.;
+      fX -= para->GetXOffset();
+      fX -= para->GetXPosOffset();
+      fX = -fX; // definition for optics only for X
       fFiredX = true;     
       //TArtCore::Info(__FILE__,"%s: RawTX1:%f, RawTX2:%f, TX1:%f, TX2:%f, TXdiff:%f, fX:%f,  Ch2NsX1:%f, Ch2NsX2:%f, XDTimeOffset:%f, XFactor:%f, XOffset:%f, XPosOffset:%f, X:%f", para->GetDetectorName()->Data(), fTX1Raw, fTX2Raw, fTX1, fTX2, fTDiffX, fX, para->GetCh2NsX1(), para->GetCh2NsX2(), para->GetXDTimeOffset(), para->GetXFactor(), para->GetXOffset(), para->GetXPosOffset(),fX);
     }
-    if((para->GetTYSumMin() >= para->GetTYSumMax()) || 
-       (fTSumY >= para->GetTYSumMin() && fTSumY <= para->GetTYSumMax()) ){  
+    else if( not(fTSumX >= para->GetTXSumMin() && fTSumX <= para->GetTXSumMax()) &&
+     (2.*fTX2-2.*fTA >= 2.*para->GetTXSumMin()-para->GetTXSumMax() )&&
+     (2.*fTX2-2.*fTA <= 2.*para->GetTXSumMax()-para->GetTXSumMin() ) ){//if TX2 and TA are reasonable
+      fTDiffX=((para->GetTXSumMin() + para->GetTXSumMax())/2 +2.*fTA)-(2.*fTX2);//Approximate TX1
+      fTDiffX = fTDiffX - para->GetXDTimeOffset();
+      fX = fTDiffX * para->GetXFactor() / 2.;
+      fX -= para->GetXOffset();
+      fX -= para->GetXPosOffset();
+      fX = -fX; // definition for optics only for X
+      fFiredX = true;
+      //TArtCore::Info(__FILE__,"%s: RawTX1:%f, RawTX2:%f, TX1:%f, TX2:%f, TXdiff:%f, fX:%f,  Ch2NsX1:%f, Ch2NsX2:%f, XDTimeOffset:%f, XFactor:%f, XOffset:%f, XPosOffset:%f, X:%f", para->GetDetectorName()->Data(), fTX1Raw, fTX2Raw, fTX1, fTX2, fTDiffX, fX, para->GetCh2NsX1(), para->GetCh2NsX2(), para->GetXDTimeOffset(), para->GetXFactor(), para->GetXOffset(), para->GetXPosOffset(),fX);
+    }
+
+
+    if((para->GetTYSumMin() >= para->GetTYSumMax()) ||
+       (fTSumY >= para->GetTYSumMin() && fTSumY <= para->GetTYSumMax()) ){
       fTDiffY = fTDiffY - para->GetYDTimeOffset();
       fY = fTDiffY * para->GetYFactor() / 2.;
       fY -= para->GetYOffset();
       fY -= para->GetYPosOffset();
       fFiredY = true;
     }
+
+    else if( not(fTSumY >= para->GetTYSumMin() && fTSumY <= para->GetTYSumMax()) &&
+    (2.*fTY1-2.*fTA >= 2.*para->GetTYSumMin()-para->GetTYSumMax() )&&
+    (2.*fTY1-2.*fTA <= 2.*para->GetTYSumMax()-para->GetTYSumMin() ) ){//if TY1 and TA are reasonable
+      fTDiffY=2.*fTY1-((para->GetTYSumMin() + para->GetTYSumMax())/2 +2.*fTA);//Approximate TY1
+      fTDiffY = fTDiffY - para->GetYDTimeOffset();
+      fY = fTDiffY * para->GetYFactor() / 2.;
+      fY -= para->GetYOffset();
+      fY -= para->GetYPosOffset();
+      fFiredY = true;
+    }
+
+    else if( not(fTSumY >= para->GetTYSumMin() && fTSumY <= para->GetTYSumMax()) &&
+    (2.*fTY2-2.*fTA >= 2.*para->GetTYSumMin()-para->GetTYSumMax() )&&
+    (2.*fTY2-2.*fTA <= 2.*para->GetTYSumMax()-para->GetTYSumMin() ) ){//if TY2 and TA are reasonable
+      fTDiffY=2.*fTY2-((para->GetTYSumMin() + para->GetTYSumMax())/2 +2.*fTA);//Approximate TY2
+      fTDiffY = fTDiffY - para->GetYDTimeOffset();
+      fY = fTDiffY * para->GetYFactor() / 2.;
+      fY -= para->GetYOffset();
+      fY -= para->GetYPosOffset();
+      fFiredY = true;
+    }
+
 
     ppac->SetTX1(fTX1);
     ppac->SetTX2(fTX2);
