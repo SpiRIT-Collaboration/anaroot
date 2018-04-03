@@ -59,7 +59,7 @@ void TArtCalibPlastic::LoadData()   {
   for(Int_t i=0;i<fEvent->GetNumSeg();i++){
     TArtRawSegmentObject *seg = fEvent->GetSegment(i);
     Int_t detector = seg->GetDetector();
-    if(PLAT == detector || STOPPLA == detector || RF == detector || PLAQ == detector) LoadData(seg); // STOPPLA is CFD TDC for 2014 Uranium campaign, TI
+    if(PLAT == detector /*|| STOPPLA == detector*/ || RF == detector || PLAQ == detector) LoadData(seg); // STOPPLA is CFD TDC for 2014 Uranium campaign, TI
   }
   return;
 
@@ -71,7 +71,7 @@ void TArtCalibPlastic::LoadData(TArtRawSegmentObject *seg)   {
   Int_t device   = seg->GetDevice();
   Int_t fpl      = seg->GetFP();
   Int_t detector = seg->GetDetector();
-  if(!(PLAT == detector || STOPPLA == detector || RF == detector || PLAQ == detector)) return;  // STOPPLA is CFD TDC for 2014 Uranium campaign, TI
+  if(!(PLAT == detector /*|| STOPPLA == detector*/ || RF == detector || PLAQ == detector)) return;  // STOPPLA is CFD TDC for 2014 Uranium campaign, TI
   for(Int_t j=0;j<seg->GetNumData();j++){
     TArtRawDataObject *d = seg->GetData(j);
     Int_t geo = d->GetGeo(); 
@@ -108,9 +108,9 @@ void TArtCalibPlastic::LoadData(TArtRawSegmentObject *seg)   {
 	if(pla->GetQRRaw()<=0)pla->SetQRRaw(val);
       }
     }
-    if(PLAT == detector || STOPPLA == detector || RF == detector ){
+    if(PLAT == detector /*|| STOPPLA == detector*/ || RF == detector ){
       if(mm==*((TArtRIDFMap *)para->GetTLMap())){
-	if(pla->GetTLRaw()<=0 &&
+	if((pla->GetTLRaw()<=0 || (para->GetTLMean()!=0)*(TMath::Abs(para->GetTLMean()-pla->GetTLRaw())>=TMath::Abs(para->GetTLMean()-val)) ) &&
 	   val>para->GetTDCUnderflow() && 
 	   val<para->GetTDCOverflow() ){ 
 	  pla->SetTLRaw(val);
@@ -120,7 +120,7 @@ void TArtCalibPlastic::LoadData(TArtRawSegmentObject *seg)   {
 	}
       }
       if(mm==*((TArtRIDFMap *)para->GetTRMap())){
-	if(pla->GetTRRaw()<=0 &&
+	if((pla->GetTRRaw()<=0 || (para->GetTRMean()!=0)*(TMath::Abs(para->GetTRMean()-pla->GetTRRaw())>=TMath::Abs(para->GetTRMean()-val)) )&&
 	   val>para->GetTDCUnderflow() && 
 	   val<para->GetTDCOverflow() ){ 
 	  pla->SetTRRaw(val);
@@ -166,6 +166,9 @@ void TArtCalibPlastic::ReconstructData()   { // call after the raw data are load
     Double_t fQLRaw = pla->GetQLRaw();
     Double_t fQRRaw = pla->GetQRRaw();
 
+    Double_t fQLPed = para->GetQPedLeft();
+    Double_t fQRPed = para->GetQPedRight();
+
     Double_t fTime = -1; 
     Double_t fTimeLSlew = -1; 
     Double_t fTimeRSlew = -1; 
@@ -174,8 +177,8 @@ void TArtCalibPlastic::ReconstructData()   { // call after the raw data are load
     //    if(fTLRaw>para->GetTDCUnderflow() && fTLRaw<para->GetTDCOverflow()) { // move to LoadData(), Dec. 02 2016 TI 
     fLFired = true;
     fTimeL = fTLRaw * para->GetTCalLeft();
-    if(fQLRaw>0){
-      fTimeLSlew = fTLRaw + para->GetTLSlewA()/(TMath::Sqrt(fQLRaw)) + para->GetTLSlewB();
+    if(fQLRaw-fQLPed>0){
+      fTimeLSlew = fTLRaw + para->GetTLSlewA()/(TMath::Sqrt(fQLRaw-fQLPed)) + para->GetTLSlewB();
       fTimeLSlew = fTimeLSlew * para->GetTCalLeft();
     }
     else{
@@ -186,8 +189,8 @@ void TArtCalibPlastic::ReconstructData()   { // call after the raw data are load
     //    if(fTRRaw>para->GetTDCUnderflow() && fTRRaw<para->GetTDCOverflow()) { // move to LoadData(), Dec. 02 2016 TI 
     fRFired = true;
     fTimeR = fTRRaw * para->GetTCalRight();
-    if(fQRRaw>0){
-      fTimeRSlew = fTRRaw + para->GetTRSlewA()/(TMath::Sqrt(fQRRaw)) + para->GetTRSlewB();
+    if(fQRRaw-fQRPed>0){
+      fTimeRSlew = fTRRaw + para->GetTRSlewA()/(TMath::Sqrt(fQRRaw-fQRPed)) + para->GetTRSlewB();
       fTimeRSlew = fTimeRSlew * para->GetTCalRight();
     }
     else{

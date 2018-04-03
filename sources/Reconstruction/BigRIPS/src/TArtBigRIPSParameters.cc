@@ -148,6 +148,7 @@ TArtPPACPara *TArtBigRIPSParameters::ParsePPACPara(TXMLNode *node) {
   Double_t  tdc_underflow = 0;
   Double_t  tdc_overflow = 4000;
   Double_t  txsum_min = 0, txsum_max = 999999., tysum_min = 0, tysum_max = 999999.;
+  Double_t  tx1_mean=0, tx2_mean=0, ty1_mean=0, ty2_mean=0, ta_mean=0; // add 170712 kaneko
 
   Int_t Tx1_fpl=0, Tx2_fpl=0, Ty1_fpl=0, Ty2_fpl=0, Ta_fpl=0;
   Int_t Qx1_fpl=0, Qx2_fpl=0, Qy1_fpl=0, Qy2_fpl=0, Qa_fpl=0;
@@ -208,6 +209,18 @@ TArtPPACPara *TArtBigRIPSParameters::ParsePPACPara(TXMLNode *node) {
 	tysum_min = (Double_t)atof(node->GetText());
       if (strcmp(node->GetNodeName(), "tysum_max") == 0)
 	tysum_max = (Double_t)atof(node->GetText());
+  
+      // add 170712 kaneko 
+      if (strcmp(node->GetNodeName(), "tx1_mean") == 0)
+        tx1_mean = (Double_t)atof(node->GetText());
+      if (strcmp(node->GetNodeName(), "tx2_mean") == 0)
+        tx2_mean = (Double_t)atof(node->GetText());
+      if (strcmp(node->GetNodeName(), "ty1_mean") == 0)
+        ty1_mean = (Double_t)atof(node->GetText());
+      if (strcmp(node->GetNodeName(), "ty2_mean") == 0)
+        ty2_mean = (Double_t)atof(node->GetText());
+      if (strcmp(node->GetNodeName(), "ta_mean") == 0)
+        ta_mean = (Double_t)atof(node->GetText());
 
 
       if (strcmp(node->GetNodeName(), "Tx1_fpl") == 0) 
@@ -279,7 +292,9 @@ TArtPPACPara *TArtBigRIPSParameters::ParsePPACPara(TXMLNode *node) {
     tdc_overflow = 1000000; 
 
   TArtCore::Info(__FILE__,"Reading database for %s PPAC",name.Data());
-  TArtPPACPara * para = new TArtPPACPara(id, name, fpl, a_ch2ns, x1_ch2ns, y1_ch2ns, x2_ch2ns, y2_ch2ns, xfactor, yfactor, xoffset, yoffset, xns_off, yns_off, xpos_off, ypos_off, xzpos, yzpos, tdc_underflow, tdc_overflow, txsum_min, txsum_max, tysum_min, tysum_max);
+  //TArtPPACPara * para = new TArtPPACPara(id, name, fpl, a_ch2ns, x1_ch2ns, y1_ch2ns, x2_ch2ns, y2_ch2ns, xfactor, yfactor, xoffset, yoffset, xns_off, yns_off, xpos_off, ypos_off, xzpos, yzpos, tdc_underflow, tdc_overflow, txsum_min, txsum_max, tysum_min, tysum_max);
+  // changed 170712 kaneko (to see MHTDC)
+  TArtPPACPara * para = new TArtPPACPara(id, name, fpl, a_ch2ns, x1_ch2ns, y1_ch2ns, x2_ch2ns, y2_ch2ns, xfactor, yfactor, xoffset, yoffset, xns_off, yns_off, xpos_off, ypos_off, xzpos, yzpos, tdc_underflow, tdc_overflow, txsum_min, txsum_max, tysum_min, tysum_max, tx1_mean, tx2_mean, ty1_mean, ty2_mean, ta_mean);
 
   para->SetTx1Map( Tx1_fpl>0 ? Tx1_fpl : fpl, Tx1_geo, Tx1_ch);
   para->SetTx2Map( Tx2_fpl>0 ? Tx2_fpl : fpl, Tx2_geo, Tx2_ch);
@@ -332,6 +347,8 @@ TArtPlasticPara *TArtBigRIPSParameters::ParsePlasticPara(TXMLNode *node) {
   Double_t  tdc_underflow = 0;
   Double_t  tdc_overflow = 4000;
   Double_t  zpos = 0;
+  Double_t  tl_mean=0;
+  Double_t  tr_mean=0;
   Int_t t_fpl=-1, t_det=-1;
   Int_t tleft_geo=-1, tleft_ch=-1, tright_geo=-1, tright_ch=-1;
   Int_t q_fpl=-1, q_det=-1;
@@ -371,6 +388,12 @@ TArtPlasticPara *TArtBigRIPSParameters::ParsePlasticPara(TXMLNode *node) {
       if (strcmp(node->GetNodeName(), "zpos") == 0)
 	zpos = (Double_t)atof(node->GetText());
 
+      // add 170719 kaneko 
+      if (strcmp(node->GetNodeName(), "tl_mean") == 0)
+        tl_mean = (Double_t)atof(node->GetText());
+      if (strcmp(node->GetNodeName(), "tr_mean") == 0)
+        tr_mean = (Double_t)atof(node->GetText());
+      
       if (strcmp(node->GetNodeName(), "t_fpl") == 0) 
 	t_fpl = atoi(node->GetText());
       if (strcmp(node->GetNodeName(), "t_det") == 0) 
@@ -414,7 +437,7 @@ TArtPlasticPara *TArtBigRIPSParameters::ParsePlasticPara(TXMLNode *node) {
     tdc_overflow = 1000000; 
 
   TArtCore::Info(__FILE__,"Reading database for %s Plastic",name.Data());
-  TArtPlasticPara * para = new TArtPlasticPara(id, name, fpl, tcal_left, tcal_right, qped_left, qped_right, tslew_left_a, tslew_left_b, tslew_right_a, tslew_right_b, tdc_underflow, tdc_overflow, zpos);
+  TArtPlasticPara * para = new TArtPlasticPara(id, name, fpl, tcal_left, tcal_right, qped_left, qped_right, tslew_left_a, tslew_left_b, tslew_right_a, tslew_right_b, tdc_underflow, tdc_overflow, zpos, tl_mean, tr_mean);
   para->SetMap(t_fpl>0 ? t_fpl : fpl, t_det>0 ? t_det : PLAT,  
 	       tleft_geo,  tleft_ch, tright_geo, tright_ch, 
 	       q_fpl>0 ? q_fpl : fpl, q_det>0 ? q_det : PLAQ,  

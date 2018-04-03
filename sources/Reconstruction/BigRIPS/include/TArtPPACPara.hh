@@ -24,8 +24,10 @@ public:
 	       Double_t tdc_uf, 
 	       Double_t tdc_of, 
 	       Double_t txmin, Double_t txmax, 
-	       Double_t tymin, Double_t tymax) : 
-    id(i), detname(n), fpl(f), ch2ns_a(c2na), ch2ns_x1(c2nx1), ch2ns_y1(c2ny1), ch2ns_x2(c2nx2), ch2ns_y2(c2ny2), xfactor(xkf), yfactor(ykf), xoffset(xko), yoffset(yko), xns_off(xnso), yns_off(ynso), xpos_off(xpo), ypos_off(ypo), xzpos(xzp), yzpos(yzp), tdc_underflow(tdc_uf), tdc_overflow(tdc_of), txsum_min(txmin), txsum_max(txmax), tysum_min(tymin), tysum_max(tymax) { }
+	       Double_t tymin, Double_t tymax,
+         Double_t tx1m, Double_t tx2m, 
+         Double_t ty1m, Double_t ty2m, Double_t tam) :
+    id(i), detname(n), fpl(f), ch2ns_a(c2na), ch2ns_x1(c2nx1), ch2ns_y1(c2ny1), ch2ns_x2(c2nx2), ch2ns_y2(c2ny2), xfactor(xkf), yfactor(ykf), xoffset(xko), yoffset(yko), xns_off(xnso), yns_off(ynso), xpos_off(xpo), ypos_off(ypo), xzpos(xzp), yzpos(yzp), tdc_underflow(tdc_uf), tdc_overflow(tdc_of), txsum_min(txmin), txsum_max(txmax), tysum_min(tymin), tysum_max(tymax), tx1_mean(tx1m), tx2_mean(tx2m), ty1_mean(ty1m), ty2_mean(ty2m), ta_mean(tam) { }
   ~TArtPPACPara() { }
 
   void SetPalameters(Int_t i, TString n, Int_t f, 
@@ -97,6 +99,12 @@ public:
   Double_t GetTYSumMin() const {return tysum_min;}
   Double_t GetTYSumMax() const {return tysum_max;}
 
+  Double_t GetTX1Mean() const {return tx1_mean;}
+  Double_t GetTX2Mean() const {return tx2_mean;}
+  Double_t GetTY1Mean() const {return ty1_mean;}
+  Double_t GetTY2Mean() const {return ty2_mean;}
+  Double_t GetTAMean() const  {return ta_mean;}
+
   TArtRIDFMap * GetTX1Map() { return &map_tx1; }
   TArtRIDFMap * GetTX2Map() { return &map_tx2; }
   TArtRIDFMap * GetTY1Map() { return &map_ty1; }
@@ -166,6 +174,13 @@ private:
   Double_t  txsum_max; // cut for timing sum. disabled if min>=max 
   Double_t  tysum_min; // cut for timing sum. disabled if min>=max 
   Double_t  tysum_max; // cut for timing sum. disabled if min>=max 
+  
+  Double_t  tx1_mean; // add 170712 kaneko (to put hit to data container, which is nearest to beam timing)
+  Double_t  tx2_mean;
+  Double_t  ty1_mean;
+  Double_t  ty2_mean;
+  Double_t  ta_mean;
+
   TArtRIDFMap map_tx1;
   TArtRIDFMap map_tx2;
   TArtRIDFMap map_ty1;

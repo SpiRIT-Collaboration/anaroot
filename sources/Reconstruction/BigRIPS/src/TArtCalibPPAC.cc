@@ -135,19 +135,19 @@ void TArtCalibPPAC::LoadData(TArtRawSegmentObject *seg)   {
     }
     if(PPACT == detector){
       if(mm == *((TArtRIDFMap *)para->GetTX1Map())){
-	if(ppac->GetTX1Raw()<=0)ppac->SetTX1Raw(val);
+	if(ppac->GetTX1Raw()<=0 || (para->GetTX1Mean()!=0)*(TMath::Abs(para->GetTX1Mean()-ppac->GetTX1Raw())>=TMath::Abs(para->GetTX1Mean()-val)) )ppac->SetTX1Raw(val);
       }
       else if(mm == *((TArtRIDFMap *)para->GetTX2Map())){
-	if(ppac->GetTX2Raw()<=0)ppac->SetTX2Raw(val);
+	if(ppac->GetTX2Raw()<=0 || (para->GetTX2Mean()!=0)*(TMath::Abs(para->GetTX2Mean()-ppac->GetTX2Raw())>=TMath::Abs(para->GetTX2Mean()-val)) )ppac->SetTX2Raw(val);
       }
       else if(mm == *((TArtRIDFMap *)para->GetTY1Map())){
-	if(ppac->GetTY1Raw()<=0)ppac->SetTY1Raw(val);
+	if(ppac->GetTY1Raw()<=0 || (para->GetTY1Mean()!=0)*(TMath::Abs(para->GetTY1Mean()-ppac->GetTY1Raw())>=TMath::Abs(para->GetTY1Mean()-val)) )ppac->SetTY1Raw(val);
       }
       else if(mm == *((TArtRIDFMap *)para->GetTY2Map())){
-	if(ppac->GetTY2Raw()<=0)ppac->SetTY2Raw(val);
+	if(ppac->GetTY2Raw()<=0 || (para->GetTY2Mean()!=0)*(TMath::Abs(para->GetTY2Mean()-ppac->GetTY2Raw())>=TMath::Abs(para->GetTY2Mean()-val)) )ppac->SetTY2Raw(val);
       }
       else if(mm == *((TArtRIDFMap *)para->GetTAMap())){
-	if(ppac->GetTARaw()<=0)ppac->SetTARaw(val);
+	if(ppac->GetTARaw()<=0 || (para->GetTAMean()!=0)*(TMath::Abs(para->GetTAMean()-ppac->GetTARaw())>=TMath::Abs(para->GetTAMean()-val)) )ppac->SetTARaw(val);
       }
     }
 
@@ -265,7 +265,7 @@ void TArtCalibPPAC::ReconstructData()   { // call after the raw data are loaded
     else if( not(fTSumY >= para->GetTYSumMin() && fTSumY <= para->GetTYSumMax()) &&
     (2.*fTY1-2.*fTA >= 2.*para->GetTYSumMin()-para->GetTYSumMax() )&&
     (2.*fTY1-2.*fTA <= 2.*para->GetTYSumMax()-para->GetTYSumMin() ) ){//if TY1 and TA are reasonable
-      fTDiffY=2.*fTY1-((para->GetTYSumMin() + para->GetTYSumMax())/2 +2.*fTA);//Approximate TY1
+      fTDiffY=2.*fTY1-((para->GetTYSumMin() + para->GetTYSumMax())/2 +2.*fTA);//Approximate TY2
       fTDiffY = fTDiffY - para->GetYDTimeOffset();
       fY = fTDiffY * para->GetYFactor() / 2.;
       fY -= para->GetYOffset();
@@ -276,7 +276,7 @@ void TArtCalibPPAC::ReconstructData()   { // call after the raw data are loaded
     else if( not(fTSumY >= para->GetTYSumMin() && fTSumY <= para->GetTYSumMax()) &&
     (2.*fTY2-2.*fTA >= 2.*para->GetTYSumMin()-para->GetTYSumMax() )&&
     (2.*fTY2-2.*fTA <= 2.*para->GetTYSumMax()-para->GetTYSumMin() ) ){//if TY2 and TA are reasonable
-      fTDiffY=2.*fTY2-((para->GetTYSumMin() + para->GetTYSumMax())/2 +2.*fTA);//Approximate TY2
+      fTDiffY=((para->GetTYSumMin() + para->GetTYSumMax())/2 +2.*fTA)-(2.*fTY2);//Approximate TY1
       fTDiffY = fTDiffY - para->GetYDTimeOffset();
       fY = fTDiffY * para->GetYFactor() / 2.;
       fY -= para->GetYOffset();

@@ -18,8 +18,9 @@ class TArtPlasticPara : public TNamed {
 		  Double_t qpedl, Double_t qpedr, 
 		  Double_t ts_al, Double_t ts_bl, Double_t ts_ar, Double_t ts_br, 
 		  Double_t tdc_uf, Double_t tdc_of, 
-		  Double_t z) :
-    id(i), detname(n), fpl(f), tcal_left(tcl), tcal_right(tcr), qped_left(qpedl), qped_right(qpedr), tslew_left_a(ts_al), tslew_left_b(ts_bl), tslew_right_a(ts_ar), tslew_right_b(ts_br), tdc_underflow(tdc_uf), tdc_overflow(tdc_of), zoffset(z){ }
+		  Double_t z,
+      Double_t tlm, Double_t trm) :
+    id(i), detname(n), fpl(f), tcal_left(tcl), tcal_right(tcr), qped_left(qpedl), qped_right(qpedr), tslew_left_a(ts_al), tslew_left_b(ts_bl), tslew_right_a(ts_ar), tslew_right_b(ts_br), tdc_underflow(tdc_uf), tdc_overflow(tdc_of), zoffset(z), tl_mean(tlm), tr_mean(trm){ }
   ~TArtPlasticPara() { }
 
   void SetPalameters(Int_t i, TString n, Int_t f, 
@@ -44,6 +45,9 @@ class TArtPlasticPara : public TNamed {
     map_qleft.SetMap (qf,qd,qlg,qlc); 
     map_qright.SetMap(qf,qd,qrg,qrc); 
   }
+  
+  void SetTLSlewA(Double_t ts_al){tslew_left_a=ts_al;}
+  void SetTRSlewA(Double_t ts_ar){tslew_right_a=ts_ar;}
 
   Int_t GetID() const { return id; }
   TString * GetDetectorName() { return &detname; }
@@ -59,6 +63,9 @@ class TArtPlasticPara : public TNamed {
   Double_t GetTDCUnderflow() const {return tdc_underflow;}
   Double_t GetTDCOverflow() const {return tdc_overflow;}
   Double_t GetZoffset() const { return zoffset; } 
+  Double_t GetTLMean() const { return tl_mean; }
+  Double_t GetTRMean() const { return tr_mean; }
+
 
   TArtRIDFMap * GetTLMap() { return &map_tleft;  }
   TArtRIDFMap * GetTRMap() { return &map_tright; }
@@ -109,6 +116,10 @@ private:
   Double_t  tdc_underflow;
   Double_t  tdc_overflow;
   Double_t  zoffset;
+
+  Double_t tl_mean;
+  Double_t tr_mean;
+
   TArtRIDFMap map_tleft;
   TArtRIDFMap map_tright;
   TArtRIDFMap map_qleft;
