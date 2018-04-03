@@ -18,6 +18,12 @@ libanaespri_la_LDFLAGS = $(LDFLAGS)
 
 anaespri_dict.cc: $(SUBHDR) anaespri_linkdef.hh
 	rootcint -f $@ -c $(DEFAULT_INCLUDES) $(INCLUDES) $^
+	@if [ ! -d $(prefix)/lib ]; then \
+	mkdir -p $(prefix)/lib; \
+	fi
+	@if [ -f anaespri_dict_rdict.pcm ]; then \
+	cp anaespri_dict_rdict.pcm $(prefix)/lib; \
+	fi
 
 .cc.o:
 
